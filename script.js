@@ -24,6 +24,16 @@ const percentCompleteElem = document.getElementById('percentComplete');
 
 import { azkar_apres_priere, azkar_matin_soir } from './azkar-data.js';
 
+function computeTodayCount() {
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  return history.filter((ts) => {
+    const stamp = new Date(ts);
+    return !Number.isNaN(stamp.getTime()) && stamp >= startOfDay;
+  }).length;
+}
+
 // Construire catégories et liste unifiée à partir des données importées
 const categories = [
   { id: 'apres-priere', label: 'Après la prière' },
@@ -92,11 +102,17 @@ function updateDisplay() {
     zikrImage.style.display = 'none';
   }
 
-  // Update stats display
-  totalCompletedElem.textContent = totalCompleted;
-  todayCountElem.textContent = computeTodayCount();
-  const pct = Math.round(((currentZikr.startCount - currentValue) / currentZikr.startCount) * 100);
-  percentCompleteElem.textContent = `${Math.max(0, Math.min(100, pct))}%`;
+  // Update stats display if the elements exist
+  if (totalCompletedElem) {
+    totalCompletedElem.textContent = totalCompleted;
+  }
+  if (todayCountElem) {
+    todayCountElem.textContent = computeTodayCount();
+  }
+  if (percentCompleteElem) {
+    const pct = Math.round(((currentZikr.startCount - currentValue) / currentZikr.startCount) * 100);
+    percentCompleteElem.textContent = `${Math.max(0, Math.min(100, pct))}%`;
+  }
 
   saveStateFor(currentZikr.id);
 }
