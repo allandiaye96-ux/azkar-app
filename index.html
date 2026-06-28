@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Azkar" />
+  <title>Azkar</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-container">
+    <h1>Azkar après la prière et du jour</h1>
+    <div class="ornament" aria-hidden="true">۞</div>
+
+    <section class="filters">
+      <div class="zikr-selector">
+        <label for="categorySelect">Catégorie :</label>
+        <select id="categorySelect"></select>
+      </div>
+
+      <div class="zikr-selector">
+        <label for="zikrSelect">Choisir un azkar :</label>
+        <select id="zikrSelect"></select>
+      </div>
+    </section>
+
+    <div id="zikrCard" class="zikr-card">
+      <div id="zikrTitle" class="zikr-title"></div>
+      <div id="zikrArabic" class="zikr-arabic"></div>
+      <div id="zikrPhonetic" class="zikr-phonetic"></div>
+      <div id="zikrText" class="zikr-text"></div>
+      <div id="zikrMeta" class="zikr-meta"></div>
+      <div id="zikrDetails" class="zikr-details"></div>
+      <button id="sourcesButton" class="sources-button">Sources</button>
+      <img id="zikrImage" class="zikr-image" alt="" />
+    </div>
+
+    <!-- Modal for sources -->
+    <div id="sourcesModal" class="modal hidden">
+      <div class="modal-content">
+        <button id="closeModal" class="modal-close">×</button>
+        <h3>Sources et références</h3>
+        <div id="modalBody" class="modal-body"></div>
+        <a id="modalSearch" class="modal-search" href="#" target="_blank" rel="noopener">Rechercher sur le web</a>
+      </div>
+    </div>
+
+    <section class="counter-panel">
+      <div class="counter-box">
+        <span class="label">Valeur actuelle :</span>
+        <span id="countdownValue" class="count-value">100</span>
+      </div>
+
+      <div class="counter-box">
+        <span class="label">Nombre de cycles :</span>
+        <span id="cycleValue" class="count-value">0</span>
+      </div>
+    </section>
+
+    <button id="decrementButton" class="action-button">
+      Cliquer pour compter
+    </button>
+
+    <button id="resetButton" class="reset-button">
+      Réinitialiser cet azkar
+    </button>
+
+    <button id="resetAllButton" class="reset-all-button">
+      Réinitialiser tous les azkar
+    </button>
+
+    <button id="installHint" class="install-hint">
+      Ajouter à l’écran d’accueil
+    </button>
+
+    <p class="instructions">
+      Chaque clic décrémente le compteur principal jusqu’à 0. Quand il repart à la valeur de départ,
+      le compteur de cycles augmente de +1. Le bouton reset demande une confirmation avant de
+      remettre les compteurs à leur valeur initiale pour l’azkar choisi.
+    </p>
+  </main>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
