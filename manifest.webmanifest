@@ -1,0 +1,10 @@
+{
+  "name": "Azkar — invocations et compteur",
+  "short_name": "Azkar",
+  "lang": "fr",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#EEF1EC",
+  "theme_color": "#2F6E68",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
