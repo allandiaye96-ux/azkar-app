@@ -3,88 +3,108 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Azkar du matin et du soir, après la prière, au coucher et pour chaque moment de la journée, avec compteur et références." />
+  <meta name="theme-color" content="#EEF1EC" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#132120" media="(prefers-color-scheme: dark)" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Azkar" />
-  <title>Azkar</title>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260628-1" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <title>Azkar — invocations et compteur</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=2" />
 </head>
 <body>
-  <main class="app-container">
-    <h1>Azkar après la prière et du jour</h1>
-    <div class="ornament" aria-hidden="true">۞</div>
-
-    <section class="filters">
-      <div class="zikr-selector">
-        <label for="categorySelect">Catégorie :</label>
-        <select id="categorySelect"></select>
-      </div>
-
-      <div class="zikr-selector">
-        <label for="zikrSelect">Choisir un azkar :</label>
-        <select id="zikrSelect"></select>
-      </div>
-    </section>
-
-    <div id="zikrCard" class="zikr-card">
-      <div id="zikrTitle" class="zikr-title"></div>
-      <div id="zikrArabic" class="zikr-arabic"></div>
-      <div id="zikrPhonetic" class="zikr-phonetic"></div>
-      <div id="zikrText" class="zikr-text"></div>
-      <div id="zikrMeta" class="zikr-meta"></div>
-      <div id="zikrDetails" class="zikr-details"></div>
-      <button id="sourcesButton" class="sources-button">Sources</button>
-      <img id="zikrImage" class="zikr-image" alt="" />
-    </div>
-
-    <!-- Modal for sources -->
-    <div id="sourcesModal" class="modal hidden">
-      <div class="modal-content">
-        <button id="closeModal" class="modal-close">×</button>
-        <h3>Sources et références</h3>
-        <div id="modalBody" class="modal-body"></div>
-        <a id="modalSearch" class="modal-search" href="#" target="_blank" rel="noopener">Rechercher sur le web</a>
+  <header class="top">
+    <div class="top-row">
+      <button id="backBtn" class="icon-btn" aria-label="Retour à la liste" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+      </button>
+      <h1 id="pageTitle" class="brand">Azkar</h1>
+      <div class="top-actions">
+        <button id="sizeDown" class="icon-btn text" aria-label="Réduire le texte arabe">ع−</button>
+        <button id="sizeUp" class="icon-btn text" aria-label="Agrandir le texte arabe">ع+</button>
+        <button id="themeBtn" class="icon-btn" aria-label="Changer de thème">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" /></svg>
+        </button>
       </div>
     </div>
+    <nav id="catNav" class="cats" aria-label="Catégories"></nav>
+  </header>
 
-    <section class="counter-panel">
-      <div class="counter-box">
-        <span class="label">Valeur actuelle :</span>
-        <span id="countdownValue" class="count-value">100</span>
+  <main id="app">
+    <!-- Liste des azkar de la catégorie -->
+    <section id="listView" class="view">
+      <div class="list-head">
+        <div>
+          <h2 id="catTitle" class="cat-title"></h2>
+          <p id="catProgress" class="cat-progress"></p>
+        </div>
+        <div id="periodSwitch" class="period" role="radiogroup" aria-label="Moment" hidden>
+          <button role="radio" data-period="matin" aria-checked="true">Matin</button>
+          <button role="radio" data-period="soir" aria-checked="false">Soir</button>
+        </div>
       </div>
-
-      <div class="counter-box">
-        <span class="label">Nombre de cycles :</span>
-        <span id="cycleValue" class="count-value">0</span>
-      </div>
+      <ol id="zikrList" class="zlist"></ol>
+      <p class="list-foot">
+        Textes arabes et références d'après <cite>Hisn al-Muslim</cite> (Sa'id al-Qahtani).
+        La progression est enregistrée sur cet appareil et repart à zéro chaque jour.
+        <button id="resetDay" class="link-btn">Remettre la journée à zéro</button>
+      </p>
     </section>
 
-    <button id="decrementButton" class="action-button">
-      Cliquer pour compter
-    </button>
+    <!-- Lecture et comptage -->
+    <section id="readerView" class="view" hidden>
+      <article class="reader">
+        <p id="rPos" class="r-pos"></p>
+        <h2 id="rTitle" class="r-title"></h2>
+        <p id="rWarn" class="r-warn" hidden></p>
+        <p id="rArabic" class="r-arabic" lang="ar" dir="rtl"></p>
+        <p id="rTranslit" class="r-translit"></p>
+        <p id="rFr" class="r-fr"></p>
+        <p id="rNote" class="r-note" hidden></p>
+        <p id="rBenefit" class="r-benefit" hidden></p>
+        <button id="sourcesBtn" class="sources-btn">Sources et authenticité</button>
+      </article>
 
-    <button id="resetButton" class="reset-button">
-      Réinitialiser cet azkar
-    </button>
-
-    <button id="resetAllButton" class="reset-all-button">
-      Réinitialiser tous les azkar
-    </button>
-
-    <button id="installHint" class="install-hint">
-      Ajouter à l’écran d’accueil
-    </button>
-
-    <p class="instructions">
-      Chaque clic décrémente le compteur principal jusqu’à 0. Quand il repart à la valeur de départ,
-      le compteur de cycles augmente de +1. Le bouton reset demande une confirmation avant de
-      remettre les compteurs à leur valeur initiale pour l’azkar choisi.
-    </p>
+      <div class="counter-bar">
+        <button id="prevBtn" class="nav-btn" aria-label="Azkar précédent">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+        </button>
+        <button id="tapBtn" class="tap" aria-describedby="tapHelp">
+          <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="ring-track" cx="60" cy="60" r="52" />
+            <circle id="ringFill" class="ring-fill" cx="60" cy="60" r="52" />
+            <g id="beads"></g>
+          </svg>
+          <span class="tap-inner">
+            <span id="tapCount" class="tap-count">0</span>
+            <span id="tapTotal" class="tap-total">sur 1</span>
+          </span>
+        </button>
+        <button id="nextBtn" class="nav-btn" aria-label="Azkar suivant">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+        </button>
+      </div>
+      <p id="tapHelp" class="tap-help">Touchez le cercle (ou appuyez sur Espace) à chaque récitation.
+        <button id="undoBtn" class="link-btn">Annuler une</button>
+        <button id="resetOne" class="link-btn">Recommencer</button>
+      </p>
+    </section>
   </main>
 
-  <script type="module" src="script.js"></script>
+  <dialog id="srcDialog" class="sheet" aria-labelledby="srcTitle">
+    <form method="dialog">
+      <h3 id="srcTitle">Sources et authenticité</h3>
+      <div id="srcBody"></div>
+      <button class="sheet-close">Fermer</button>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="script.js?v=2"></script>
 </body>
 </html>
